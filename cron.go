@@ -12,7 +12,6 @@ import (
 	"github.com/gogs/cron"
 
 	"gogs.io/gogs/internal/conf"
-	"gogs.io/gogs/internal/db"
 )
 
 var c = cron.New()
@@ -37,9 +36,7 @@ func NewContext() {
 		entry, err = c.AddFunc("Repository health check", conf.Cron.RepoHealthCheck.Schedule, db.GitFsck)
 		if err != nil {
 			log.Fatal("Cron.(repository health check): %v", err)
-		}
-		if conf.Cron.RepoHealthCheck.RunAtStart {
-			entry.Prev = time.Now()
+		
 			entry.ExecTimes++
 			go db.GitFsck()
 		}
